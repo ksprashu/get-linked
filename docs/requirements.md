@@ -1,0 +1,133 @@
+# Requirements Document: AI Research Extractor Chrome Extension
+
+## 1. Introduction
+
+### 1.1 Problem Statement
+
+Researchers, students, and content creators increasingly rely on AI-powered deep research tools like OpenAI Deep Research, Google Gemini Deep Research, and Grok Deep Research. However, managing and consolidating the outputs (research content, citations, sources) from these disparate tools is inefficient. There's a need for a streamlined way to extract, store, and integrate this valuable research information into existing workflows, specifically for local archival, use with Google's NotebookLM, and publishing via GitHub Pages/Jekyll.
+
+### 1.2 Project Goal
+
+To develop a Chrome extension that allows users to easily extract full research content and associated sources/links from specified AI deep research tools, save them locally in standardized formats (Markdown, CSV), and integrate them seamlessly with Google NotebookLM and Jekyll-based workflows.
+
+## 2. User Personas and Use Cases
+
+### 2.1 User Personas
+
+*   **Persona 1: Academic Researcher (Dr. Anya Sharma)**
+    *   **Needs:** Collects vast amounts of information from various sources, needs meticulous citation management, uses tools like Zotero and NotebookLM for synthesis, occasionally publishes findings online.
+    *   **Pain Points:** Manually copying/pasting from AI tools is time-consuming and error-prone, losing formatting/citations, difficulty consolidating sources from multiple AI platforms.
+*   **Persona 2: Content Creator (Mark Chen)**
+    *   **Needs:** Quickly gathers information and sources for articles/blog posts, needs easy access to extracted content for writing, publishes content on a Jekyll-based blog.
+    *   **Pain Points:** Juggling multiple browser tabs for different AI research results, reformatting content for Markdown, manually tracking source links.
+*   **Persona 3: Student (Priya Singh)**
+    *   **Needs:** Compiles research for assignments, needs to cite sources correctly, uses NotebookLM for organizing notes and sources.
+    *   **Pain Points:** Keeping track of numerous links from AI research sessions, ensuring all relevant sources are captured for NotebookLM, potential information overload.
+
+### 2.2 Use Cases
+
+*   **UC-01: Extract Research from AI Tool**
+    *   **Actor:** Any User
+    *   **Goal:** Extract the full research content and source links from a supported AI tool page.
+    *   **Flow:**
+        1.  User navigates to a completed research page on OpenAI Deep Research, Google Gemini Deep Research, or Grok Deep Research.
+        2.  User clicks the AI Research Extractor extension icon.
+        3.  Extension automatically detects the AI tool and parses the content and sources.
+        4.  User is presented with options (e.g., Save Locally, Add to NotebookLM).
+*   **UC-02: Save Content Locally**
+    *   **Actor:** Any User
+    *   **Goal:** Save extracted content and links to local storage.
+    *   **Flow:**
+        1.  After extraction (UC-01), user selects "Save Locally".
+        2.  Extension saves the full research content as a Markdown (.md) file, including original formatting and citations, with Jekyll front matter.
+        3.  Extension appends the extracted source links to a local CSV file.
+        4.  User receives confirmation of successful save.
+*   **UC-03: Add Sources to NotebookLM**
+    *   **Actor:** Any User
+    *   **Goal:** Add extracted source links to an existing Google NotebookLM notebook.
+    *   **Flow:**
+        1.  After extraction (UC-01), user selects "Add to NotebookLM".
+        2.  Extension prompts user to select the target NotebookLM notebook (mechanism TBD - potentially requires user input or API integration if available).
+        3.  User chooses whether to add all extracted sources or select specific ones.
+        4.  Extension adds the selected links (including a link to the original AI research article itself) as sources to the chosen notebook.
+        5.  Extension performs deduplication against existing sources in the notebook to respect the 100-source limit.
+        6.  User receives confirmation or error message.
+*   **UC-04: Prepare Content for GitHub/Jekyll**
+    *   **Actor:** Content Creator, Researcher
+    *   **Goal:** Use locally saved Markdown file for a Jekyll site.
+    *   **Flow:**
+        1.  User saves content locally (UC-02).
+        2.  The saved .md file includes Jekyll-compatible front matter (e.g., title, date, source AI tool).
+        3.  User manually uploads the .md file to their GitHub repository configured with GitHub Pages/Jekyll or adds it via their local git workflow.
+
+## 3. Functional Requirements
+
+### 3.1 Extraction
+
+*   **FR-01:** The extension MUST be able to identify when the user is on a results page of OpenAI Deep Research, Google Gemini Deep Research, or Grok Deep Research.
+*   **FR-02:** The extension MUST extract the primary research content generated by the AI tool.
+*   **FR-03:** The extension MUST preserve the formatting (headings, lists, bolding, italics, etc.) of the extracted content as accurately as possible when converting to Markdown.
+*   **FR-04:** The extension MUST extract inline citations or footnotes present in the research content.
+*   **FR-05:** The extension MUST extract the list of source URLs/links provided by the AI tool.
+*   **FR-06:** Extraction functionality MUST be equally prioritized and functional for all three specified AI tools.
+
+### 3.2 Local Storage
+
+*   **FR-07:** The extension MUST provide an option to save the extracted content locally.
+*   **FR-08:** Locally saved content MUST be stored in Markdown (.md) format.
+*   **FR-09:** The Markdown file MUST include Jekyll-compatible front matter (e.g., `title`, `date`, `ai_tool`, `source_url`). The title could be derived from the research query or page title.
+*   **FR-10:** The extension MUST provide an option to save extracted source links locally.
+*   **FR-11:** Locally saved links MUST be stored in CSV format.
+*   **FR-12:** The CSV file should contain columns like `Timestamp`, `AI_Tool`, `Research_Query_or_Title`, `Source_URL`, `Source_Title` (if available).
+*   **FR-13:** The extension MUST append new links to the existing CSV file, creating it if it doesn't exist.
+
+### 3.3 NotebookLM Integration
+
+*   **FR-14:** The extension MUST provide an option to add extracted source links to a Google NotebookLM notebook.
+*   **FR-15:** The extension MUST allow the user to specify or select the target NotebookLM notebook. (Note: The exact mechanism depends on NotebookLM's capabilities - manual URL input might be required if no API exists).
+*   **FR-16:** The extension MUST include the URL of the original AI deep research article itself as one of the sources added to NotebookLM.
+*   **FR-17:** The extension MUST provide options to add EITHER all extracted sources OR a user-selected subset of sources to NotebookLM.
+*   **FR-18:** The extension MUST check for duplicate links (comparing against existing sources in the target notebook) before adding new ones. Duplicate links should NOT be added.
+*   **FR-19:** If adding all sources would exceed NotebookLM's 100-source limit (after deduplication), the extension should notify the user and potentially prioritize adding sources (e.g., based on order of appearance) or allow selection. (Prioritization strategy TBD).
+
+### 3.4 GitHub/Jekyll Compatibility
+
+*   **FR-20:** Markdown files generated via the "Save Locally" function (FR-08, FR-09) MUST be compatible with standard GitHub Pages and Jekyll rendering.
+*   **FR-21:** The extension itself does not need to directly interact with Git or GitHub APIs. Publishing is assumed to be a manual user process using the generated files.
+
+## 4. Non-Functional Requirements
+
+*   **NFR-01 (Usability):** The extension interface should be intuitive and require minimal user configuration. Extraction should ideally be triggered by a single click.
+*   **NFR-02 (Performance):** Extraction and saving processes should be reasonably fast and not significantly impact browser performance.
+*   **NFR-03 (Reliability):** The extension should reliably parse content and links from the supported AI tools. It should handle variations in page structure gracefully, though updates may be needed if tool UIs change significantly.
+*   **NFR-04 (Compatibility):** The extension MUST function correctly on the latest stable version of Google Chrome.
+*   **NFR-05 (Security):** The extension must request minimal permissions required for its functionality (e.g., access to specific AI tool domains, storage). It should not capture or transmit user data unnecessarily. Local storage should be handled securely.
+*   **NFR-06 (Maintainability):** Code should be well-structured and commented to facilitate future updates, especially adapting to changes in AI tool page structures.
+
+## 5. Constraints and Assumptions
+
+### 5.1 Constraints
+
+*   **C-01:** The extension will only support Google Chrome.
+*   **C-02:** The extension relies on the current DOM structure and CSS selectors of the target AI research tools. Significant changes to these tools' UIs may break functionality and require updates.
+*   **C-03:** NotebookLM integration capabilities are limited by what NotebookLM exposes (e.g., lack of a public API might necessitate manual steps for the user).
+*   **C-04:** The NotebookLM source limit is assumed to be 100.
+*   **C-05:** GitHub/Jekyll publishing relies on manual user actions (file upload or local git).
+
+### 5.2 Assumptions
+
+*   **A-01:** Users have legitimate access to the specified AI deep research tools.
+*   **A-02:** Users have a Google account and utilize NotebookLM for the integration features.
+*   **A-03:** Users understand the basics of Markdown and optionally CSV formats.
+*   **A-04:** Users requiring GitHub/Jekyll integration have a basic understanding of how to manage files for these platforms.
+*   **A-05:** The AI tools provide research content and source links in a parsable HTML structure.
+
+## 6. Success Criteria
+
+*   **SC-01:** Successful extraction of research content and source links from test pages on OpenAI Deep Research, Google Gemini Deep Research, and Grok Deep Research with >95% accuracy in preserving formatting and identifying all links.
+*   **SC-02:** Generated Markdown files render correctly on GitHub Pages/Jekyll, including front matter.
+*   **SC-03:** Extracted links are correctly appended to the local CSV file with accurate metadata.
+*   **SC-04:** Links (including the source article link) are successfully added to a specified NotebookLM notebook, respecting user selection (all/subset).
+*   **SC-05:** Deduplication logic correctly prevents adding existing links to NotebookLM.
+*   **SC-06:** The extension operates reliably across multiple extraction sessions without crashing or significant performance degradation.
+*   **SC-07:** User feedback indicates the extension is easy to use and successfully streamlines their research workflow.

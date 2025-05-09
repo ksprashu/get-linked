@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon 128x128</title>
+  <style>
+    body { margin: 0; padding: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="icon" width="128" height="128"></canvas>
+  <script>
+    const canvas = document.getElementById('icon');
+    const ctx = canvas.getContext('2d');
+
+    // Background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, 128, 128);
+
+    // Border
+    ctx.strokeStyle = '#1a73e8';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(8, 8, 112, 112);
+
+    // Text
+    ctx.fillStyle = '#1a73e8';
+    ctx.font = 'bold 42px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('AI', 64, 48);
+    ctx.fillText('RE', 64, 80);
+
+    // Instructions
+    console.log('Right-click on the canvas and select "Save Image As..." to save as icon128.png');
+  </script>
+</body>
+</html>

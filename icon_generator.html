@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Research Extractor - Icon Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #1a73e8;
+    }
+    canvas {
+      border: 1px solid #dadce0;
+      margin: 10px;
+    }
+    .icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .icon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+    }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #0d66d0;
+    }
+    .instructions {
+      background-color: #e8f0fe;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Research Extractor - Icon Generator</h1>
+
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <p>This page generates placeholder icons for the AI Research Extractor Chrome extension. Click the "Generate Icons" button to create placeholder icons, then right-click each icon and select "Save Image As..." to save them to the appropriate location.</p>
+    <p>Save the icons as:</p>
+    <ul>
+      <li><code>icons/icon16.png</code> - 16x16 icon</li>
+      <li><code>icons/icon48.png</code> - 48x48 icon</li>
+      <li><code>icons/icon128.png</code> - 128x128 icon</li>
+    </ul>
+  </div>
+
+  <button id="generate-btn">Generate Icons</button>
+
+  <div class="icons-container">
+    <div class="icon-card">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <span>16x16</span>
+      <button class="save-btn" data-canvas="icon16" data-filename="icon16.png">Save</button>
+    </div>
+    <div class="icon-card">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <span>48x48</span>
+      <button class="save-btn" data-canvas="icon48" data-filename="icon48.png">Save</button>
+    </div>
+    <div class="icon-card">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <span>128x128</span>
+      <button class="save-btn" data-canvas="icon128" data-filename="icon128.png">Save</button>
+    </div>
+  </div>
+
+  <script>
+    const canvases = {
+      icon16: document.getElementById('icon16'),
+      icon48: document.getElementById('icon48'),
+      icon128: document.getElementById('icon128')
+    };
+
+    document.getElementById('generate-btn').addEventListener('click', generateIcons);
+
+    // Add event listeners to save buttons

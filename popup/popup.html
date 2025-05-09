@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Research Extractor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AI Research Extractor</h1>
+
+    <div class="instructions">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Keep this side panel open while browsing Gemini</li>
+        <li>Copy the <strong>main content</strong> from the Gemini page</li>
+        <li>Paste it in the "Content" field below</li>
+        <li>Copy the <strong>sources/references</strong> separately</li>
+        <li>Paste them in the "Sources" field below</li>
+        <li>Provide a title for your research</li>
+        <li>Click "Process" to extract and format</li>
+      </ol>
+    </div>
+
+    <div class="form-group">
+      <label for="research-title">Research Title:</label>
+      <input type="text" id="research-title" placeholder="Enter a title for your research">
+    </div>
+
+    <div class="form-group">
+      <label for="content-area">Main Content:</label>
+      <div id="content-container" class="content-editable-container">
+        <div id="content-area" contenteditable="true" class="content-editable"
+             placeholder="Paste the main research content here..."></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="sources-area">Sources/References:</label>
+      <div id="sources-container" class="content-editable-container">
+        <div id="sources-area" contenteditable="true" class="content-editable"
+             placeholder="Paste the sources/references here..."></div>
+      </div>
+    </div>
+
+    <div class="parsing-options">
+      <label>Parsing Method:</label>
+      <div class="radio-group">
+        <input type="radio" id="basic-parsing" name="parsing-method" value="basic" checked>
+        <label for="basic-parsing">Basic (Fast, Works Offline)</label>
+
+        <input type="radio" id="enhanced-parsing" name="parsing-method" value="enhanced" disabled>
+        <label for="enhanced-parsing">Enhanced (AI-Assisted, Coming Soon)</label>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="process-button">Process Content</button>
+      <button id="save-button" disabled>Save as Markdown</button>
+    </div>
+
+    <div id="status-container">
+      <p id="status-message">Ready to process content.</p>
+      <p id="extraction-details"></p>
+    </div>
+  </div>
+
+  <script src="../lib/turndown.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
